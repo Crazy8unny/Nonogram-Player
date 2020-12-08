@@ -91,7 +91,7 @@
 
     outputCanvas.addEventListener('mouseup', function (e) {
       // if (!container.classList.contains('calculating')) {
-      // calculate()
+      calculate()
       // }
     })
 
@@ -154,15 +154,23 @@
     })
 
     function calculate() {
-      container.classList.add('calculating')
 
       setTimeout(function () {
         let { horizontalClues, verticalClues } = generateClues(grid)
-
         solver(grid[0].length, grid.length, horizontalClues, verticalClues)
           .then(solvedGrid => {
+            let wrong = false;
+            for (let row in solvedGrid) {
+              for (let col in solvedGrid[row]) {
+                if (solvedGrid[row][col] == 1 && ogrid[row][col] != 1) {
+                  wrong = true;
+                }
+              }
+            }
+            if (!wrong) {
+              alert("Congratulationssssssssss !!!111!111!1111")
+            }
             drawOutputGrid(solvedGrid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
-            container.classList.remove('calculating')
           })
       }, 50)
     }
