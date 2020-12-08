@@ -25,6 +25,8 @@
     let inputCtx = inputCanvas.getContext('2d')
     let outputCtx = outputCanvas.getContext('2d')
 
+    let winned = false;
+
     let grid = [
       [0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
       [0, 0, 1, 0, 0, 1, 1, 1, 0, 0],
@@ -54,18 +56,22 @@
     let hClues, vClues;
 
     outputCanvas.addEventListener('mousedown', function (e) {
-      if(e.button == 1) {
+      if (e.button == 1) {
         e.preventDefault();
-    }
-      handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height) 
-      let { horizontalClues, verticalClues } = generateClues(grid)
-      drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      }
+      if (!winned) {
+        handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height)
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      }
     })
 
     outputCanvas.addEventListener('mousemove', function (e) {
-      handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height)
-      let { horizontalClues, verticalClues } = generateClues(grid)
-      drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      if (!winned) {
+        handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height)
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      }
     })
 
     outputCanvas.addEventListener('contextmenu', function (e) {
@@ -74,18 +80,20 @@
 
     outputCanvas.addEventListener('mouseup', function (e) {
       // Check winning
-
-      let wrong = false;
-      for (let row in grid) {
-        for (let col in grid[row]) {
-          if (grid[row][col] == 1 && ogrid[row][col] != 1 ||
+      if (!winned) {
+        let wrong = false;
+        for (let row in grid) {
+          for (let col in grid[row]) {
+            if (grid[row][col] == 1 && ogrid[row][col] != 1 ||
               grid[row][col] == 2 && ogrid[row][col] == 1) {
-            wrong = true;
+              wrong = true;
+            }
           }
         }
-      }
-      if (!wrong) {
-        alert("Congratulationssssssssss !!!111!111!1111")
+        if (!wrong) {
+          alert("Congratulationssssssssss !!!111!111!1111")
+          winned = true;
+        }
       }
     })
 
@@ -115,6 +123,7 @@
         let { horizontalClues, verticalClues } = generateClues(grid)
         let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
         grid = solvedGrid;
+        winned = false;
       })
 
       fr.readAsText(e.target.files[0])
@@ -144,6 +153,7 @@
         let { horizontalClues, verticalClues } = generateClues(grid)
         let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
         grid = solvedGrid;
+        winned = false;
       })
 
       fr.readAsDataURL(e.target.files[0])
@@ -151,6 +161,7 @@
     })
 
     clearBtn.addEventListener('click', function (e) {
+      winned = false;
       ogrid = ogrid.map(row => row.map(() => 0))
       let { horizontalClues, verticalClues } = generateClues(grid)
       drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
@@ -168,6 +179,7 @@
     }
 
     async function init() {
+      winned = false;
       let { horizontalClues, verticalClues } = generateClues(grid)
       let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
       grid = solvedGrid;
@@ -175,6 +187,28 @@
     }
 
     init()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }, { "./draw-input-grid": 2, "./draw-output-grid": 3, "./export-grid": 4, "./generate-clues": 5, "./generate-grid-from-image": 6, "./handle-mouse-event": 7, "./resize-grid": 8, "./solver": 9, "./generate-grid-from-json": 10 }], 2: [function (require, module, exports) {
     function drawInputGrid(grid, canvas, ctx) {
 
@@ -482,7 +516,7 @@
           ? width / (grid[0].length * 1.5)
           : height / (grid.length * 1.5)
       )
-      let dist = Math.floor( width >= height ? width / 3 : height / 3);
+      let dist = Math.floor(width >= height ? width / 3 : height / 3);
 
       for (let y in grid) {
         for (let x in grid[y]) {
