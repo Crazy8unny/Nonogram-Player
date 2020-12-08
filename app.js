@@ -53,26 +53,6 @@
 
     let hClues, vClues;
 
-    inputCanvas.addEventListener('contextmenu', function (e) {
-      e.preventDefault()
-    })
-
-    inputCanvas.addEventListener('mousedown', function (e) {
-      handleMouseEvent(e, grid, inputCanvas.width, inputCanvas.height)
-      drawInputGrid(grid, inputCanvas, inputCtx)
-    })
-
-    inputCanvas.addEventListener('mousemove', function (e) {
-      handleMouseEvent(e, grid, inputCanvas.width, inputCanvas.height)
-      drawInputGrid(grid, inputCanvas, inputCtx)
-    })
-
-    inputCanvas.addEventListener('mouseup', function (e) {
-      if (!container.classList.contains('calculating')) {
-        // calculate()
-      }
-    })
-
     outputCanvas.addEventListener('mousedown', function (e) {
       if(e.button == 1) {
         e.preventDefault();
@@ -93,17 +73,20 @@
     })
 
     outputCanvas.addEventListener('mouseup', function (e) {
-      // if (!container.classList.contains('calculating')) {
-      calculate()
-      // }
-    })
+      // Check winning
 
-
-
-
-    clearBtn.addEventListener('click', function (e) {
-      ogrid = ogrid.map(row => row.map(() => 0))
-      calculate()
+      let wrong = false;
+      for (let row in grid) {
+        for (let col in grid[row]) {
+          if (grid[row][col] == 1 && ogrid[row][col] != 1 ||
+              grid[row][col] == 2 && ogrid[row][col] == 1) {
+            wrong = true;
+          }
+        }
+      }
+      if (!wrong) {
+        alert("Congratulationssssssssss !!!111!111!1111")
+      }
     })
 
     importJSONBtn.addEventListener('click', function (e) {
@@ -128,7 +111,10 @@
         ogrid = ogrid2;
         // grid.forEach(function(row, i) { for (let index in row) {ogrid[row[index]] = 0} });
         // drawInputGrid(grid, inputCanvas, inputCtx)
-        calculate()
+        // calculate()
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
+        grid = solvedGrid;
       })
 
       fr.readAsText(e.target.files[0])
@@ -146,13 +132,28 @@
       let fr = new FileReader()
 
       fr.addEventListener('load', async function () {
-        grid = await generateGridFromImage(fr.result, widthInput.value, heightInput.value)
-        drawInputGrid(grid, inputCanvas, inputCtx)
-        calculate()
+        grid = await generateGridFromImage(fr.result, 20, 20)
+        let ogrid2 = [];
+        for (let row in grid) {
+          ogrid2[row] = [];
+          for (let col in grid[row]) {
+            ogrid2[row][col] = 0;
+          }
+        }
+        ogrid = ogrid2;
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
+        grid = solvedGrid;
       })
 
       fr.readAsDataURL(e.target.files[0])
       fileInput.value = "";
+    })
+
+    clearBtn.addEventListener('click', function (e) {
+      ogrid = ogrid.map(row => row.map(() => 0))
+      let { horizontalClues, verticalClues } = generateClues(grid)
+      drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
     })
 
     function calculate() {
@@ -161,18 +162,6 @@
         let { horizontalClues, verticalClues } = generateClues(grid)
         solver(grid[0].length, grid.length, horizontalClues, verticalClues)
           .then(solvedGrid => {
-            let wrong = false;
-            for (let row in solvedGrid) {
-              for (let col in solvedGrid[row]) {
-                if (solvedGrid[row][col] == 1 && ogrid[row][col] != 1 ||
-                    solvedGrid[row][col] == 2 && ogrid[row][col] == 1) {
-                  wrong = true;
-                }
-              }
-            }
-            if (!wrong) {
-              alert("Congratulationssssssssss !!!111!111!1111")
-            }
             drawOutputGrid(solvedGrid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
           })
       }, 50)
@@ -181,8 +170,7 @@
     async function init() {
       let { horizontalClues, verticalClues } = generateClues(grid)
       let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
-
-      drawInputGrid(grid, inputCanvas, inputCtx)
+      grid = solvedGrid;
       drawOutputGrid(solvedGrid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
     }
 
