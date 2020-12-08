@@ -162,7 +162,8 @@
             let wrong = false;
             for (let row in solvedGrid) {
               for (let col in solvedGrid[row]) {
-                if (solvedGrid[row][col] == 1 && ogrid[row][col] != 1) {
+                if (solvedGrid[row][col] == 1 && ogrid[row][col] != 1 ||
+                    solvedGrid[row][col] == 2 && ogrid[row][col] == 1) {
                   wrong = true;
                 }
               }
