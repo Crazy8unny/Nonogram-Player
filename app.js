@@ -74,6 +74,9 @@
     })
 
     outputCanvas.addEventListener('mousedown', function (e) {
+      if(e.button == 1) {
+        e.preventDefault();
+    }
       handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height) 
       let { horizontalClues, verticalClues } = generateClues(grid)
       drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
@@ -99,9 +102,8 @@
 
 
     clearBtn.addEventListener('click', function (e) {
-      grid = grid.map(row => row.map(() => 0))
-      drawInputGrid(grid, inputCanvas, inputCtx)
-      // calculate()
+      ogrid = ogrid.map(row => row.map(() => 0))
+      calculate()
     })
 
     importJSONBtn.addEventListener('click', function (e) {
@@ -120,7 +122,7 @@
         for (let row in grid) {
           ogrid2[row] = [];
           for (let col in grid[row]) {
-            ogrid2[row][col] = grid[row][col];
+            ogrid2[row][col] = 0;
           }
         }
         ogrid = ogrid2;
