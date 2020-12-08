@@ -18,6 +18,7 @@
     let clearBtn = container.querySelector('button[name="clear"]')
     let imageBtn = container.querySelector('button[name="image"]')
     let importJSONBtn = container.querySelector('button[name="import-json"]')
+    let copyBtn = container.querySelector('button[name="copy"]')
 
     let inputCanvas = container.querySelector('#input-grid canvas')
     let outputCanvas = container.querySelector('#output-grid canvas')
@@ -165,6 +166,10 @@
       ogrid = ogrid.map(row => row.map(() => 0))
       let { horizontalClues, verticalClues } = generateClues(grid)
       drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+    })
+
+    copyBtn.addEventListener('click', function (e) {
+      outputCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
     })
 
     function calculate() {
