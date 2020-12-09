@@ -92,7 +92,15 @@
           }
         }
         if (!wrong) {
-          alert("Congratulationssssssssss !!!111!111!1111")
+          Swal.fire({
+            title: 'Congratulations !!11!11!',
+            text: 'You win !',
+            imageUrl: 'https://thumbs.gfycat.com/EachIndolentHoopoe-max-1mb.gif',
+            imageWidth: 240,
+            imageHeight: 180,
+            width: 450,
+            imageAlt: 'Avatar Cool',
+          })          
           winned = true;
         }
       }
@@ -169,7 +177,7 @@
     })
 
     copyBtn.addEventListener('click', function (e) {
-      outputCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]));
+      outputCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
     })
 
     function calculate() {
