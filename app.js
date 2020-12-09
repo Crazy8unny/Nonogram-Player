@@ -9,8 +9,7 @@
     let exportGrid = require('./export-grid')
     let generateGridFromImage = require('./generate-grid-from-image')
     let generateGridFromJson = require('./generate-grid-from-json')
-
-
+    var isTouchSupported = false;
     let container = document.getElementById('container')
 
     let fileInput = container.querySelector('input[name="file"]')
@@ -19,6 +18,7 @@
     let imageBtn = container.querySelector('button[name="image"]')
     let importJSONBtn = container.querySelector('button[name="import-json"]')
     let copyBtn = container.querySelector('button[name="copy"]')
+
 
     let inputCanvas = container.querySelector('#input-grid canvas')
     let outputCanvas = container.querySelector('#output-grid canvas')
@@ -54,14 +54,67 @@
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
 
+    let prevGrids = [];
+
     let hClues, vClues;
+
+    // *********************** Touch support ********************** //
+
+    container.addEventListener("touchstart", function (e) {
+      if (e.target == outputCanvas) {
+        e.preventDefault();
+      }
+    }, false);
+    container.addEventListener("touchend", function (e) {
+      if (e.target == outputCanvas) {
+        e.preventDefault();
+      }
+    }, false);
+    container.addEventListener("touchmove", function (e) {
+      if (e.target == outputCanvas) {
+        e.preventDefault();
+      }
+    }, false);
+
+    outputCanvas.addEventListener("touchstart", function (e) {
+      isTouchSupported = true;
+      // mousePos = getTouchPos(canvas, e);
+      var touch = e.touches[0];
+      var rect = outputCanvas.getBoundingClientRect();
+      var mouseEvent = new MouseEvent("mousedown", {
+        clientX: (touch.clientX - rect.left),
+        clientY: (touch.clientY - rect.top),
+        buttons: 1
+      });
+      outputCanvas.dispatchEvent(mouseEvent);
+    });
+
+    outputCanvas.addEventListener("touchend", function (e) {
+      var mouseEvent = new MouseEvent("mouseup", {});
+      outputCanvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    outputCanvas.addEventListener("touchmove", function (e) {
+      var touch = e.touches[0];
+      var rect = outputCanvas.getBoundingClientRect();
+      var mouseEvent = new MouseEvent("mousemove", {
+        clientX: (touch.clientX - rect.left),
+        clientY: (touch.clientY - rect.top),
+        buttons: 1
+      });
+      outputCanvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    // *********************** Touch support ********************** //
+
+
 
     outputCanvas.addEventListener('mousedown', function (e) {
       if (e.button == 1) {
         e.preventDefault();
       }
       if (!winned) {
-        handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height)
+        handleMouseEvent(e, ogrid, prevGrids, isTouchSupported, outputCanvas.width, outputCanvas.height)
         let { horizontalClues, verticalClues } = generateClues(grid)
         drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
@@ -69,7 +122,7 @@
 
     outputCanvas.addEventListener('mousemove', function (e) {
       if (!winned) {
-        handleMouseEvent(e, ogrid, outputCanvas.width, outputCanvas.height)
+        handleMouseEvent(e, ogrid, prevGrids, isTouchSupported, outputCanvas.width, outputCanvas.height)
         let { horizontalClues, verticalClues } = generateClues(grid)
         drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
@@ -519,7 +572,13 @@
 
     module.exports = generateGridFromImage
   }, {}], 7: [function (require, module, exports) {
-    function handleMouseEvent(e, grid, width, height) {
+    function handleMouseEvent(e, grid, prevGrids, isTouchSupported, width, height) {
+      let mouseX = e.offsetX;
+      let mouseY = e.offsetY;
+      if (isTouchSupported) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      }
 
       if (e.buttons !== 1 && e.buttons !== 2 && e.buttons !== 4) return
 
@@ -530,23 +589,27 @@
           : height / (grid.length * 1.5)
       )
       let dist = Math.floor(width >= height ? width / 3 : height / 3);
-
+      let changed = false;
+      prevGrids.push(grid);
       for (let y in grid) {
         for (let x in grid[y]) {
           if (
-            (e.offsetX - dist) > x * dim && (e.offsetX - dist) < x * dim + dim &&
-            (e.offsetY - dist) > y * dim && (e.offsetY - dist) < y * dim + dim
+            (mouseX - dist) > x * dim && (mouseX - dist) < x * dim + dim &&
+            (mouseY - dist) > y * dim && (mouseY - dist) < y * dim + dim
           ) {
             switch (e.buttons) {
               case 1:
-                grid[y][x] = 1; break;
+                grid[y][x] = 1; changed = true; break;
               case 2:
-                grid[y][x] = 0; break;
+                grid[y][x] = 0; changed = true; break;
               case 4:
-                grid[y][x] = 2; break;
+                grid[y][x] = 2; changed = true; break;
             }
           }
         }
+      }
+      if (!changed) {
+        prevGrids.pop();
       }
 
     }
