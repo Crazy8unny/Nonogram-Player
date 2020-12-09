@@ -164,3 +164,11 @@ footer {
   grid-column: 1 / 3;
   font-size: 14px;
 }
+
+.touch-mode-bck {
+  background-color: #DBDBDB
+}
+
+.touch-mode-selected-color {
+  border: 4px solid #5ACE77;
+}

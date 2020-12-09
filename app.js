@@ -9,8 +9,8 @@
     let exportGrid = require('./export-grid')
     let generateGridFromImage = require('./generate-grid-from-image')
     let generateGridFromJson = require('./generate-grid-from-json')
-    var isTouchSupported = false;
     let container = document.getElementById('container')
+    let body = document.body;
 
     let fileInput = container.querySelector('input[name="file"]')
     let jsonInput = container.querySelector('input[name="jsonFile"]')
@@ -18,7 +18,11 @@
     let imageBtn = container.querySelector('button[name="image"]')
     let importJSONBtn = container.querySelector('button[name="import-json"]')
     let copyBtn = container.querySelector('button[name="copy"]')
+    let modeBtn = container.querySelector('button[name="mode"]')
 
+    let blackBtn = container.querySelector('#blackBtn');
+    let emptyBtn = container.querySelector('#emptyBtn');
+    let disableBtn = container.querySelector('#disableBtn');
 
     let inputCanvas = container.querySelector('#input-grid canvas')
     let outputCanvas = container.querySelector('#output-grid canvas')
@@ -26,8 +30,10 @@
     let inputCtx = inputCanvas.getContext('2d')
     let outputCtx = outputCanvas.getContext('2d')
 
+    let touchable = 'ontouchstart' in window;
+    let isTouchUsed = false;
+    let selectedColor = blackBtn;
     let winned = false;
-
     let grid = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -40,7 +46,6 @@
       [1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
       [1, 1, 1, 1, 0, 0, 0, 1, 1, 1]
     ]
-
     let ogrid = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -53,10 +58,8 @@
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
-
     let prevGrids = [];
 
-    let hClues, vClues;
 
     // *********************** Touch support ********************** //
 
@@ -77,7 +80,7 @@
     }, false);
 
     outputCanvas.addEventListener("touchstart", function (e) {
-      isTouchSupported = true;
+      isTouchUsed = true;
       // mousePos = getTouchPos(canvas, e);
       var touch = e.touches[0];
       var rect = outputCanvas.getBoundingClientRect();
@@ -110,19 +113,41 @@
 
 
     outputCanvas.addEventListener('mousedown', function (e) {
+      let btn = e.buttons;
       if (e.button == 1) {
         e.preventDefault();
       }
       if (!winned) {
-        handleMouseEvent(e, ogrid, prevGrids, isTouchSupported, outputCanvas.width, outputCanvas.height)
+        if (isTouchUsed && e.buttons != 0) {
+          switch (selectedColor) {
+            case blackBtn: 
+              btn = 1; break;
+            case emptyBtn:
+              btn = 2; break;
+            case disableBtn:
+              btn = 4; break;
+          }
+        }
+        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
         let { horizontalClues, verticalClues } = generateClues(grid)
         drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
     })
 
     outputCanvas.addEventListener('mousemove', function (e) {
+      let btn = e.buttons;
       if (!winned) {
-        handleMouseEvent(e, ogrid, prevGrids, isTouchSupported, outputCanvas.width, outputCanvas.height)
+        if (isTouchUsed && e.buttons != 0) {
+          switch (selectedColor) {
+            case blackBtn: 
+              btn = 1; break;
+            case emptyBtn:
+              btn = 2; break;
+            case disableBtn:
+              btn = 4; break;
+          }
+        }
+        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
         let { horizontalClues, verticalClues } = generateClues(grid)
         drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
@@ -185,7 +210,7 @@
         let { horizontalClues, verticalClues } = generateClues(grid)
         let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
         grid = solvedGrid;
-        winned = false;
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       })
 
       fr.readAsText(e.target.files[0])
@@ -215,7 +240,7 @@
         let { horizontalClues, verticalClues } = generateClues(grid)
         let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
         grid = solvedGrid;
-        winned = false;
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       })
 
       fr.readAsDataURL(e.target.files[0])
@@ -233,6 +258,47 @@
       outputCanvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]));
     })
 
+    modeBtn.addEventListener('click', function (e) {
+      if (!isTouchUsed) {
+        body.classList.add("touch-mode-bck");
+        selectedColor = blackBtn;
+        blackBtn.classList.add("touch-mode-selected-color");
+        isTouchUsed = true;
+      }
+      else {
+        body.classList.remove("touch-mode-bck");
+        selectedColor.classList.remove("touch-mode-selected-color");
+        isTouchUsed = false;
+      }
+      
+    })
+
+    blackBtn.addEventListener('click', function (e) {
+      if (isTouchUsed) {
+        selectedColor.classList.remove("touch-mode-selected-color");
+        selectedColor = blackBtn;
+        selectedColor.classList.add("touch-mode-selected-color");
+      }
+    })
+
+    emptyBtn.addEventListener('click', function (e) {
+      if (isTouchUsed) {
+        selectedColor.classList.remove("touch-mode-selected-color");
+        selectedColor = emptyBtn;
+        selectedColor.classList.add("touch-mode-selected-color");
+      }
+    })
+    
+    disableBtn.addEventListener('click', function (e) {
+      if (isTouchUsed) {
+        selectedColor.classList.remove("touch-mode-selected-color");
+        selectedColor = disableBtn;
+        selectedColor.classList.add("touch-mode-selected-color");
+      }
+    })
+
+    
+
     function calculate() {
 
       setTimeout(function () {
@@ -246,6 +312,9 @@
 
     async function init() {
       winned = false;
+      if (touchable) {
+        modeBtn.click();
+      }
       let { horizontalClues, verticalClues } = generateClues(grid)
       let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
       grid = solvedGrid;
@@ -334,15 +403,15 @@
           switch (ogrid[y][x]) {
             case 0:
               ctx.fillStyle = '#FFFFFF'
-              break
+              break;
 
             case 1:
               ctx.fillStyle = '#000000'
-              break
+              break;
 
             default:
               ctx.fillStyle = '#FFFFFF'
-              break
+              break;
           }
 
           ctx.fillRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
@@ -572,15 +641,15 @@
 
     module.exports = generateGridFromImage
   }, {}], 7: [function (require, module, exports) {
-    function handleMouseEvent(e, grid, prevGrids, isTouchSupported, width, height) {
+    function handleMouseEvent(e, grid, prevGrids, isTouchUsed, touchable, btn, width, height) {
       let mouseX = e.offsetX;
       let mouseY = e.offsetY;
-      if (isTouchSupported) {
+      if (isTouchUsed && touchable) {
         mouseX = e.clientX;
         mouseY = e.clientY;
       }
 
-      if (e.buttons !== 1 && e.buttons !== 2 && e.buttons !== 4) return
+      if (btn !== 1 && btn !== 2 && btn !== 4) return
 
       // let dim = Math.floor(grid[0].length >= grid.length ? width / grid[0].length : height / grid.length)
       let dim = Math.floor(
@@ -597,7 +666,7 @@
             (mouseX - dist) > x * dim && (mouseX - dist) < x * dim + dim &&
             (mouseY - dist) > y * dim && (mouseY - dist) < y * dim + dim
           ) {
-            switch (e.buttons) {
+            switch (btn) {
               case 1:
                 grid[y][x] = 1; changed = true; break;
               case 2:
