@@ -847,7 +847,7 @@
             grid[counter] = []
           }
           else {
-            grid[counter].push(clean[letter])
+            grid[counter].push(clean[letter] * 1)
           }
         }
         resolve(grid)
