@@ -20,6 +20,7 @@
     let importJSONBtn = container.querySelector('button[name="importJson"]')
     let copyBtn = container.querySelector('button[name="copy"]')
     let modeBtn = container.querySelector('button[name="mode"]')
+    let saveBtn = container.querySelector('button[name="save"]')
 
     let blackBtn = container.querySelector('#blackBtn');
     let emptyBtn = container.querySelector('#emptyBtn');
@@ -347,7 +348,43 @@
         selectedColor.classList.remove("touch-mode-selected-color");
         isTouchUsed = false;
       }
+    })
 
+    saveBtn.addEventListener('click', function (e) {
+      let gridString = '[\n   ' + grid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
+      let ogridString = '[\n   ' + ogrid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
+      db.add({
+        Time: firebase.firestore.Timestamp.fromDate(new Date()),
+        grid: gridString,
+        ogrid: ogridString,
+        isSavedNonogram: true
+      })
+        .then(function (docRef) {
+          Swal.fire({
+            icon: "success",
+            title: 'your nonogram has been saved !',
+            input: 'text',
+            inputValue: docRef.id,
+            inputAttributes: {
+              autocapitalize: 'off',
+              disabled: 'true',
+            },
+            showCancelButton: true,
+            confirmButtonText: 'copy',
+            showLoaderOnConfirm: true,
+            preConfirm: (id) => {
+              console.log(id)
+              var dummy = document.createElement("input");
+              document.body.appendChild(dummy);
+              dummy.setAttribute("id", "dummy_id");
+              document.getElementById("dummy_id").value=id;
+              dummy.select();
+              document.execCommand("copy");
+              document.body.removeChild(dummy);
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          })
+        })
     })
 
     blackBtn.addEventListener('click', function (e) {
