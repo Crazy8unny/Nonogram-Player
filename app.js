@@ -221,7 +221,7 @@
                 nonogram = nonogram.data();
                 if (nonogram == undefined) {
                   Swal.showValidationMessage(
-                    `Error: That nonogram not exist !`
+                    `Error: Nonogram not exist !`
                   )
                 }
                 else {
@@ -251,18 +251,8 @@
             showConfirmButton: false,
             timer: 1500
           })
-          grid = await generateGridFromJson(result.value.grid)
-          let ogrid2 = [];
-          for (let row in grid) {
-            ogrid2[row] = [];
-            for (let col in grid[row]) {
-              ogrid2[row][col] = 0;
-            }
-          }
-          ogrid = ogrid2;
-          // grid.forEach(function(row, i) { for (let index in row) {ogrid[row[index]] = 0} });
-          // drawInputGrid(grid, inputCanvas, inputCtx)
-          // calculate()
+          grid = await generateGridFromJson(result.value.grid);
+          ogrid = await generateGridFromJson(result.value.grid);
           let { horizontalClues, verticalClues } = generateClues(grid)
           let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
           grid = solvedGrid;
