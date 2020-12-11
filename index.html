@@ -6,7 +6,16 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
   <link href="style.css?v=1.0.2" rel="stylesheet" />
   <link rel="icon" href="./Symbol.png">
-  <script type="text/javascript" src="app.js?v=1.0.2" defer="defer"></script>
+  <script type="text/javascript" src="./src/app.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/draw-input-grid.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/draw-output-grid.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/export-grid.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/generate-clues.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/generate-grid-from-image.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/generate-grid-from-json.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/handle-mouse-event.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/resize-grid.js" defer="defer"></script>
+  <script type="text/javascript" src="./src/solver.js" defer="defer"></script>
   <script src="./utils/sweetalert2.all.js"></script>
 </head>
 
@@ -30,7 +39,9 @@
         <input name="height" type="number" value="10" max="25" min="5" step="5" />
       </div> -->
 
-      <button name="import-json">Import JSON</button>
+      <button name="importCode">Import Code</button>
+
+      <button name="importJson">Import JSON</button>
       <input id="jsonFile" name="jsonFile" type='file' type='jsonFile' accept="text/plain, application/json" />
 
       <input id="file" name="file" type='file' accept="image/png, image/jpeg, image/gif, image/bmp" />

@@ -20,5 +20,8 @@
     "gulp-babel": "^7.0.1",
     "gulp-bro": "^1.0.3",
     "gulp-plumber": "^1.2.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^9.4.2"
   }
 }

@@ -11,11 +11,11 @@ function generateGridFromJson(src) {
         grid[counter] = []
       }
       else {
-        grid[counter].push(clean[letter])
+        grid[counter].push(clean[letter] * 1)
       }
     }
     resolve(grid)
   })
 }
-  
-module.exports = generateGridFromJson
+
+// module.exports = generateGridFromJson

@@ -2,10 +2,10 @@ function drawInputGrid(grid, canvas, ctx) {
 
   canvas.width = canvas.width
 
-  let dim = Math.floor( 
-    grid[0].length >= grid.length 
-    ? canvas.width / grid[0].length
-    : canvas.height / grid.length
+  let dim = Math.floor(
+    grid[0].length >= grid.length
+      ? canvas.width / grid[0].length
+      : canvas.height / grid.length
   )
 
   // Cells
@@ -30,4 +30,4 @@ function drawInputGrid(grid, canvas, ctx) {
 
 }
 
-module.exports = drawInputGrid
+// module.exports = drawInputGrid

@@ -1,11 +1,11 @@
-function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
+function drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, canvas, ctx) {
 
   canvas.width = canvas.width
 
   let dim = Math.floor(
     grid[0].length >= grid.length
-    ? canvas.width  / (grid[0].length * 1.5)
-    : canvas.height / (grid.length * 1.5)
+      ? canvas.width / (grid[0].length * 1.5)
+      : canvas.height / (grid.length * 1.5)
   )
 
   // Background
@@ -13,37 +13,37 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
   // Cells
-  for (let y in grid) {
-    for (let x in grid[y]) {
+  for (let y in ogrid) {
+    for (let x in ogrid[y]) {
 
       ctx.strokeStyle = '#686868'
       ctx.strokeRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
 
-      switch (grid[y][x]) {
-        case 0: 
-          ctx.fillStyle = '#FF0000'
-          break
-
-        case 1: 
-          ctx.fillStyle = '#000000'
-          break
-
-        default: 
+      switch (ogrid[y][x]) {
+        case 0:
           ctx.fillStyle = '#FFFFFF'
-          break
+          break;
+
+        case 1:
+          ctx.fillStyle = '#000000'
+          break;
+
+        default:
+          ctx.fillStyle = '#FFFFFF'
+          break;
       }
 
       ctx.fillRect(canvas.width / 3 + x * dim, canvas.height / 3 + y * dim, dim, dim)
 
-      if (grid[y][x] == 2) {
+      if (ogrid[y][x] == 2) {
         ctx.beginPath()
         ctx.strokeStyle = '#FF0000'
         ctx.moveTo(
-          canvas.width  / 3 + x * dim + dim * 0.2,
+          canvas.width / 3 + x * dim + dim * 0.2,
           canvas.height / 3 + y * dim + dim * 0.2
         )
         ctx.lineTo(
-          canvas.width  / 3 + x * dim + dim - dim * 0.2,
+          canvas.width / 3 + x * dim + dim - dim * 0.2,
           canvas.height / 3 + y * dim + dim - dim * 0.2
         )
         ctx.stroke()
@@ -54,7 +54,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
           canvas.height / 3 + y * dim + dim * 0.2
         )
         ctx.lineTo(
-          canvas.width  / 3 + x * dim + dim * 0.2,
+          canvas.width / 3 + x * dim + dim * 0.2,
           canvas.height / 3 + y * dim + dim - dim * 0.2
         )
         ctx.stroke()
@@ -70,18 +70,18 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
       ctx.fillStyle = y % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
       ctx.fillRect(
-        canvas.width  / 3 - x * dim - dim, 
-        canvas.height / 3 + y * dim, 
-        dim, 
+        canvas.width / 3 - x * dim - dim,
+        canvas.height / 3 + y * dim,
+        dim,
         dim
       )
-      
+
       if (horizontalClues[y][x]) {
         ctx.font = dim * 0.4 + 'px Arial'
         ctx.fillStyle = '#000000'
         ctx.fillText(
-          horizontalClues[y][x], 
-          canvas.width  / 3 - x * dim - dim / 1.5, 
+          horizontalClues[y][x],
+          canvas.width / 3 - x * dim - dim / 1.5,
           canvas.height / 3 + y * dim + dim / 1.5
         )
       }
@@ -92,8 +92,8 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
       ctx.font = dim * 0.4 + 'px Arial'
       ctx.fillStyle = '#000000'
       ctx.fillText(
-        0, 
-        canvas.width  / 3 - dim / 1.5, 
+        0,
+        canvas.width / 3 - dim / 1.5,
         canvas.height / 3 + y * dim + dim / 1.5
       )
     }
@@ -106,9 +106,9 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
       ctx.fillStyle = x % 2 == 0 ? '#DDDDDD' : '#EAEAEA'
       ctx.fillRect(
-        canvas.width  / 3 + x * dim, 
-        canvas.height / 3 - y * dim - dim, 
-        dim, 
+        canvas.width / 3 + x * dim,
+        canvas.height / 3 - y * dim - dim,
+        dim,
         dim
       )
 
@@ -116,8 +116,8 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
         ctx.font = dim * 0.4 + 'px Arial'
         ctx.fillStyle = '#000000'
         ctx.fillText(
-          verticalClues[x][y], 
-          canvas.width  / 3 + x * dim + dim / 3, 
+          verticalClues[x][y],
+          canvas.width / 3 + x * dim + dim / 3,
           canvas.height / 3 - y * dim - dim / 3
         )
       }
@@ -127,8 +127,8 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
       ctx.font = dim * 0.4 + 'px Arial'
       ctx.fillStyle = '#000000'
       ctx.fillText(
-        0, 
-        canvas.width  / 3 + x * dim + dim / 3, 
+        0,
+        canvas.width / 3 + x * dim + dim / 3,
         canvas.height / 3 - dim / 3
       )
     }
@@ -141,7 +141,7 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
       ctx.strokeStyle = '#000000'
       ctx.lineWidth = 1.5
       ctx.moveTo(canvas.width / 3 + x * dim, 0)
-      ctx.lineTo(canvas.width / 3 + x * dim, canvas.height / 3 + dim * grid.length )
+      ctx.lineTo(canvas.width / 3 + x * dim, canvas.height / 3 + dim * grid.length)
       ctx.stroke()
     }
   }
@@ -159,4 +159,4 @@ function drawOutputGrid(grid, horizontalClues, verticalClues, canvas, ctx) {
 
 }
 
-module.exports= drawOutputGrid
+// module.exports = drawOutputGrid

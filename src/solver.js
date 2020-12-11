@@ -1,7 +1,7 @@
 async function solver(cols, rows, horizontalClues, verticalClues) {
 
   let grid = []
-  
+
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       if (!grid[y]) grid[y] = []
@@ -73,7 +73,7 @@ function getPermutations(clues, length) {
     let row = []
 
     for (let x = 0; x < length; x++) row.push(2)
-    
+
     return [row]
   }
 
@@ -116,4 +116,4 @@ function getPermutations(clues, length) {
 
 }
 
-module.exports = solver
+// module.exports = solver

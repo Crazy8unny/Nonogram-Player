@@ -6,9 +6,9 @@ function generateGridFromImage(src, width, height) {
 
     img.src = src
 
-    img.onload = function() {
+    img.onload = function () {
 
-      canvas.width  = width
+      canvas.width = width
       canvas.height = height
       canvas.getContext('2d').drawImage(img, 0, 0, width, height)
 
@@ -34,4 +34,4 @@ function generateGridFromImage(src, width, height) {
 
 }
 
-module.exports = generateGridFromImage
+// module.exports = generateGridFromImage

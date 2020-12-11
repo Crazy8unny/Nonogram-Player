@@ -1,6 +1,3 @@
-let drawOutputGrid = require('./draw-output-grid')
-let generateClues  = require('./generate-clues')
-
 function exportGrid(grid, type) {
 
   let a = document.createElement('a')
@@ -11,11 +8,11 @@ function exportGrid(grid, type) {
     let { horizontalClues, verticalClues } = generateClues(grid)
     let blankGrid = grid.map(row => row.map(() => 3))
 
-    canvas.width  = blankGrid[0].length * 100
+    canvas.width = blankGrid[0].length * 100
     canvas.height = blankGrid.length * 100
 
     drawOutputGrid(blankGrid, horizontalClues, verticalClues, canvas, ctx)
-    
+
     let img = canvas.toDataURL("image/png")
 
     a.setAttribute('href', 'data:image/png' + img)
@@ -38,4 +35,4 @@ function exportGrid(grid, type) {
 
 }
 
-module.exports = exportGrid
+// module.exports = exportGrid

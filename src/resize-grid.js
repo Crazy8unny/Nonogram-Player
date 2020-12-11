@@ -14,8 +14,8 @@ function resizeGrid(cols, rows, grid) {
 
   if (grid.length < rows) {
     for (let y = grid.length; y < rows; y++) {
-      grid[y] = grid[0].map(() => 0)      
-    } 
+      grid[y] = grid[0].map(() => 0)
+    }
 
   } else if (grid.length > rows) {
     while (grid.length > rows) {
@@ -25,4 +25,4 @@ function resizeGrid(cols, rows, grid) {
 
 }
 
-module.exports = resizeGrid
+// module.exports = resizeGrid
