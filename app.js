@@ -252,7 +252,7 @@
             timer: 1500
           })
           grid = await generateGridFromJson(result.value.grid);
-          ogrid = await generateGridFromJson(result.value.grid);
+          ogrid = await generateGridFromJson(result.value.ogrid);
           let { horizontalClues, verticalClues } = generateClues(grid)
           let solvedGrid = await solver(grid[0].length, grid.length, horizontalClues, verticalClues)
           grid = solvedGrid;
