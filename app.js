@@ -368,6 +368,7 @@
             inputAttributes: {
               autocapitalize: 'off',
               disabled: 'true',
+              id: 'saveInput'
             },
             showCancelButton: true,
             confirmButtonText: 'copy',
