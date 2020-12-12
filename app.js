@@ -233,7 +233,7 @@
           }
           catch (error) {
             Swal.showValidationMessage(
-              `Error: ${error} !!!`
+              error
             )
           }
         },
