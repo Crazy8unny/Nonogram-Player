@@ -113,7 +113,6 @@
     outputCanvas.addEventListener("touchmove", function (e) {
       var touch1 = e.touches[0];
       var touch2 = e.touches[1];
-      alert(e.touches.length)
       if (touch1 && touch2) {
         var p1 = {
           x: touch1.clientX,
