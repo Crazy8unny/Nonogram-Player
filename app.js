@@ -90,6 +90,9 @@
       if (e.target == outputCanvas && e.touches.length  < 2) {
         e.preventDefault();
       }
+      else {
+        alert("hi")
+      }
     }, false);
 
     outputCanvas.addEventListener("touchstart", function (e) {
