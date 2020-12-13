@@ -87,11 +87,13 @@
       }
     }, false);
     container.addEventListener("touchmove", function (e) {
-      if (e.target == outputCanvas && e.touches.length  < 2) {
-        e.preventDefault();
-      }
-      else {
-        alert("hi")
+      if (e.target == outputCanvas) {
+        if (e.touches.length  < 2) {
+          e.preventDefault();
+        }
+        else {
+          alert("hi")
+        }
       }
     }, false);
 
