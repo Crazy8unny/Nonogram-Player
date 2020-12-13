@@ -77,17 +77,17 @@
     // *********************** Touch support ********************** //
 
     container.addEventListener("touchstart", function (e) {
-      if (e.target == outputCanvas && e.changedTouches < 2) {
+      if (e.target == outputCanvas && e.touches.length < 2) {
         e.preventDefault();
       }
     }, false);
     container.addEventListener("touchend", function (e) {
-      if (e.target == outputCanvas && e.changedTouches < 2) {
+      if (e.target == outputCanvas && e.touches.length  < 2) {
         e.preventDefault();
       }
     }, false);
     container.addEventListener("touchmove", function (e) {
-      if (e.target == outputCanvas && e.changedTouches < 2) {
+      if (e.target == outputCanvas && e.touches.length  < 2) {
         e.preventDefault();
       }
     }, false);
