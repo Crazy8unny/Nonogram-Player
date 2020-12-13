@@ -43,6 +43,7 @@
     };
     let db;
 
+    let touchesList = [];
     let touchable = 'ontouchstart' in window;
     let isTouchUsed = false;
     let selectedColor = blackBtn;
@@ -75,29 +76,19 @@
 
 
     // *********************** Touch support ********************** //
-
-    container.addEventListener("touchstart", function (e) {
-      if (e.target == outputCanvas) {
-        e.preventDefault();
-      }
-    }, false);
-    container.addEventListener("touchend", function (e) {
-      if (e.target == outputCanvas) {
-        e.preventDefault();
-      }
-    }, false);
     container.addEventListener("touchmove", function (e) {
       if (e.target == outputCanvas) {
-        if (e.touches.length  < 2) {
+        if (touchesList.length  < 2) {
           e.preventDefault();
         }
         else {
-          alert("hi")
+          alert("hey")
         }
       }
     }, false);
 
     outputCanvas.addEventListener("touchstart", function (e) {
+      touchesList.push(e.touches[0]);
       isTouchUsed = true;
       // mousePos = getTouchPos(canvas, e);
       var touch = e.touches[0];
@@ -111,6 +102,7 @@
     });
 
     outputCanvas.addEventListener("touchend", function (e) {
+      touchesList.pop();
       var mouseEvent = new MouseEvent("mouseup", {});
       outputCanvas.dispatchEvent(mouseEvent);
     }, false);
