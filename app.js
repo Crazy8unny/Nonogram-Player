@@ -106,15 +106,15 @@
     });
 
     outputCanvas.addEventListener("touchend", function (e) {
+      var mouseEvent = new MouseEvent("mouseup", {});
+      outputCanvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    outputCanvas.addEventListener("touchmove", function (e) {
       var touch1 = e.evt.touches[0];
       var touch2 = e.evt.touches[1];
-      if (touch1 && touch2) {
-        // if the stage was under Konva's drag&drop
-        // we need to stop it, and implement our own pan logic with two pointers
-        if (stage.isDragging()) {
-          stage.stopDrag();
-        }
 
+      if (touch1 && touch2) {
         var p1 = {
           x: touch1.clientX,
           y: touch1.clientY,
@@ -163,20 +163,14 @@
         lastCenter = newCenter;
       }
       else {
-        var mouseEvent = new MouseEvent("mouseup", {});
+        var rect = outputCanvas.getBoundingClientRect();
+        var mouseEvent = new MouseEvent("mousemove", {
+          clientX: (touch1.clientX - rect.left),
+          clientY: (touch1.clientY - rect.top),
+          buttons: 1
+        });
         outputCanvas.dispatchEvent(mouseEvent);
       }
-    }, false);
-
-    outputCanvas.addEventListener("touchmove", function (e) {
-      var touch = e.touches[0];
-      var rect = outputCanvas.getBoundingClientRect();
-      var mouseEvent = new MouseEvent("mousemove", {
-        clientX: (touch.clientX - rect.left),
-        clientY: (touch.clientY - rect.top),
-        buttons: 1
-      });
-      outputCanvas.dispatchEvent(mouseEvent);
     }, false);
 
     // *********************** Touch support ********************** //
