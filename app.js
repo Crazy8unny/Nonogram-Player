@@ -82,7 +82,6 @@
           e.preventDefault();
         }
         else {
-          alert("hey")
         }
       }
     }, false);
