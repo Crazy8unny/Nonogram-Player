@@ -208,6 +208,10 @@
       Swal.fire({
         title: 'Enter nonogram code:',
         input: 'text',
+        inputAttributes: {
+          autocapitalize: 'off',
+          id: 'loadInput'
+        },
         showCancelButton: true,
         confirmButtonText: 'Start',
         showLoaderOnConfirm: true,

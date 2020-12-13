@@ -177,6 +177,6 @@ footer {
   margin-left: 26%;
 }
 
-#saveInput, #dummy_id {
+#loadInput, #saveInput, #dummy_id {
   text-transform: none;
 }
