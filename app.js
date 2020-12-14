@@ -21,6 +21,7 @@
     let copyBtn = container.querySelector('button[name="copy"]')
     let modeBtn = container.querySelector('button[name="mode"]')
     let saveBtn = container.querySelector('button[name="save"]')
+    let checkBtn = container.querySelector('button[name="check"]')
 
     let blackBtn = container.querySelector('#blackBtn');
     let emptyBtn = container.querySelector('#emptyBtn');
@@ -395,6 +396,38 @@
           })
         })
     })
+
+    checkBtn.addEventListener('click', function (e) {
+      if (!winned) {
+        let wrong = false;
+        for (let row in grid) {
+          for (let col in grid[row]) {
+            if (grid[row][col] == 1 && ogrid[row][col] == 2 ||
+              grid[row][col] == 2 && ogrid[row][col] == 1) 
+            {
+              wrong = true;
+            }
+          }
+        }
+        if (wrong) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oh no',
+            text: 'You have mistake =,(',
+          });
+        }
+        else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Keep going !',
+            text: 'You don\'t have any mistakes 8)',
+          });
+        }
+      }
+    })
+
+
+
 
     blackBtn.addEventListener('click', function (e) {
       if (isTouchUsed) {
