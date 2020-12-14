@@ -78,7 +78,7 @@
     // *********************** Touch support ********************** //
     container.addEventListener("touchmove", function (e) {
       if (e.target == outputCanvas) {
-        if (touchesList.length  < 2) {
+        if (touchesList.length < 2) {
           e.preventDefault();
         }
         else {
@@ -88,16 +88,20 @@
 
     outputCanvas.addEventListener("touchstart", function (e) {
       touchesList.push(e.touches[0]);
-      isTouchUsed = true;
-      // mousePos = getTouchPos(canvas, e);
-      var touch = e.touches[0];
-      var rect = outputCanvas.getBoundingClientRect();
-      var mouseEvent = new MouseEvent("mousedown", {
-        clientX: (touch.clientX - rect.left),
-        clientY: (touch.clientY - rect.top),
-        buttons: 1
-      });
-      outputCanvas.dispatchEvent(mouseEvent);
+      if (touchesList.length < 2) {
+        isTouchUsed = true;
+        // mousePos = getTouchPos(canvas, e);
+        var touch = e.touches[0];
+        var rect = outputCanvas.getBoundingClientRect();
+        var mouseEvent = new MouseEvent("mousedown", {
+          clientX: (touch.clientX - rect.left),
+          clientY: (touch.clientY - rect.top),
+          buttons: 1
+        });
+        outputCanvas.dispatchEvent(mouseEvent);
+      }
+      else {
+      }
     });
 
     outputCanvas.addEventListener("touchend", function (e) {
@@ -107,7 +111,7 @@
     }, false);
 
     outputCanvas.addEventListener("touchmove", function (e) {
-      if (touchesList.length  < 2) {
+      if (touchesList.length < 2) {
         var touch = e.touches[0];
         var rect = outputCanvas.getBoundingClientRect();
         var mouseEvent = new MouseEvent("mousemove", {
@@ -115,7 +119,8 @@
           clientY: (touch.clientY - rect.top),
           buttons: 1
         });
-        outputCanvas.dispatchEvent(mouseEvent);      }
+        outputCanvas.dispatchEvent(mouseEvent);
+      }
       else {
       }
     }, false);
@@ -381,7 +386,7 @@
               var dummy = document.createElement("input");
               document.body.appendChild(dummy);
               dummy.setAttribute("id", "dummy_id");
-              document.getElementById("dummy_id").value=id;
+              document.getElementById("dummy_id").value = id;
               dummy.select();
               document.execCommand("copy");
               document.body.removeChild(dummy);
