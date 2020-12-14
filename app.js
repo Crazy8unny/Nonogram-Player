@@ -107,14 +107,17 @@
     }, false);
 
     outputCanvas.addEventListener("touchmove", function (e) {
-      var touch = e.touches[0];
-      var rect = outputCanvas.getBoundingClientRect();
-      var mouseEvent = new MouseEvent("mousemove", {
-        clientX: (touch.clientX - rect.left),
-        clientY: (touch.clientY - rect.top),
-        buttons: 1
-      });
-      outputCanvas.dispatchEvent(mouseEvent);
+      if (touchesList.length  < 2) {
+        var touch = e.touches[0];
+        var rect = outputCanvas.getBoundingClientRect();
+        var mouseEvent = new MouseEvent("mousemove", {
+          clientX: (touch.clientX - rect.left),
+          clientY: (touch.clientY - rect.top),
+          buttons: 1
+        });
+        outputCanvas.dispatchEvent(mouseEvent);      }
+      else {
+      }
     }, false);
 
     // *********************** Touch support ********************** //
