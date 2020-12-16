@@ -361,10 +361,12 @@
         body.classList.add("touch-mode-bck");
         selectedColor = blackBtn;
         blackBtn.classList.add("touch-mode-selected-color");
+        blackBtn.classList.add("touchPadding");
         isTouchUsed = true;
       }
       else {
         body.classList.remove("touch-mode-bck");
+        blackBtn.classList.remove("touchPadding");
         selectedColor.classList.remove("touch-mode-selected-color");
         isTouchUsed = false;
       }

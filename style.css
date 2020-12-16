@@ -180,3 +180,7 @@ footer {
 #loadInput, #saveInput, #dummy_id, #swal2-content {
   text-transform: none;
 }
+
+.touchPadding {
+  margin-left: 22%;
+}
