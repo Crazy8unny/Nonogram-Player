@@ -77,33 +77,53 @@
 
 
     // *********************** Touch support ********************** //
-    container.addEventListener("touchmove", function (e) {
-      if (e.target == outputCanvas) {
-        if (touchesList.length < 2) {
-          e.preventDefault();
-        }
-        else {
-        }
-      }
-    }, false);
-
     outputCanvas.addEventListener("touchstart", function (e) {
-      touchesList.push(e.touches[0]);
-      if (touchesList.length < 2) {
+      if (!winned && touchesList.length < 2) {
+        touchesList.push(e.touches[0]);
         isTouchUsed = true;
-        // mousePos = getTouchPos(canvas, e);
         var touch = e.touches[0];
         var rect = outputCanvas.getBoundingClientRect();
-        var mouseEvent = new MouseEvent("mousedown", {
-          clientX: (touch.clientX - rect.left),
-          clientY: (touch.clientY - rect.top),
-          buttons: 1
-        });
-        outputCanvas.dispatchEvent(mouseEvent);
+        e.clientX = (touch.clientX - rect.left);
+        e.clientY = (touch.clientY - rect.top);
+        let btn;
+        switch (selectedColor) {
+          case blackBtn:
+            btn = 1; break;
+          case emptyBtn:
+            btn = 2; break;
+          case disableBtn:
+            btn = 4; break;
+        }
+        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
-      else {
-      }
+      else { }
     });
+
+    outputCanvas.addEventListener("touchmove", function (e) {
+      if (touchesList.length < 2) {
+        e.preventDefault();
+        isTouchUsed = true;
+        var touch = e.touches[0];
+        var rect = outputCanvas.getBoundingClientRect();
+        e.clientX = (touch.clientX - rect.left);
+        e.clientY = (touch.clientY - rect.top);
+        let btn;
+        switch (selectedColor) {
+          case blackBtn:
+            btn = 1; break;
+          case emptyBtn:
+            btn = 2; break;
+          case disableBtn:
+            btn = 4; break;
+        }
+        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      }
+      else { }
+    }, false);
 
     outputCanvas.addEventListener("touchend", function (e) {
       touchesList.pop();
@@ -111,20 +131,7 @@
       outputCanvas.dispatchEvent(mouseEvent);
     }, false);
 
-    outputCanvas.addEventListener("touchmove", function (e) {
-      if (touchesList.length < 2) {
-        var touch = e.touches[0];
-        var rect = outputCanvas.getBoundingClientRect();
-        var mouseEvent = new MouseEvent("mousemove", {
-          clientX: (touch.clientX - rect.left),
-          clientY: (touch.clientY - rect.top),
-          buttons: 1
-        });
-        outputCanvas.dispatchEvent(mouseEvent);
-      }
-      else {
-      }
-    }, false);
+
 
     // *********************** Touch support ********************** //
     // *********************** Mouse support ********************** //
@@ -132,43 +139,47 @@
 
 
     outputCanvas.addEventListener('mousedown', function (e) {
-      let btn = e.buttons;
-      if (e.button == 1) {
-        e.preventDefault();
-      }
-      if (!winned) {
-        if (isTouchUsed && e.buttons != 0) {
-          switch (selectedColor) {
-            case blackBtn:
-              btn = 1; break;
-            case emptyBtn:
-              btn = 2; break;
-            case disableBtn:
-              btn = 4; break;
-          }
+      if (!touchable || !isTouchUsed) {
+        let btn = e.buttons;
+        if (e.button == 1) {
+          e.preventDefault();
         }
-        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
-        let { horizontalClues, verticalClues } = generateClues(grid)
-        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+        if (!winned) {
+          if (isTouchUsed && e.buttons != 0) {
+            switch (selectedColor) {
+              case blackBtn:
+                btn = 1; break;
+              case emptyBtn:
+                btn = 2; break;
+              case disableBtn:
+                btn = 4; break;
+            }
+          }
+          handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
+          let { horizontalClues, verticalClues } = generateClues(grid)
+          drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+        }
       }
     })
 
     outputCanvas.addEventListener('mousemove', function (e) {
-      let btn = e.buttons;
-      if (!winned) {
-        if (isTouchUsed && e.buttons != 0) {
-          switch (selectedColor) {
-            case blackBtn:
-              btn = 1; break;
-            case emptyBtn:
-              btn = 2; break;
-            case disableBtn:
-              btn = 4; break;
+      if (!touchable || !isTouchUsed) {
+        let btn = e.buttons;
+        if (!winned) {
+          if (isTouchUsed && e.buttons != 0) {
+            switch (selectedColor) {
+              case blackBtn:
+                btn = 1; break;
+              case emptyBtn:
+                btn = 2; break;
+              case disableBtn:
+                btn = 4; break;
+            }
           }
+          handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
+          let { horizontalClues, verticalClues } = generateClues(grid)
+          drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
         }
-        handleMouseEvent(e, ogrid, prevGrids, isTouchUsed, touchable, btn, outputCanvas.width, outputCanvas.height)
-        let { horizontalClues, verticalClues } = generateClues(grid)
-        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
       }
     })
 
@@ -403,8 +414,7 @@
         for (let row in grid) {
           for (let col in grid[row]) {
             if (grid[row][col] == 1 && ogrid[row][col] == 2 ||
-              grid[row][col] == 2 && ogrid[row][col] == 1) 
-            {
+              grid[row][col] == 2 && ogrid[row][col] == 1) {
               wrong = true;
             }
           }
