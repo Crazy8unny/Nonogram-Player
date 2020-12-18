@@ -173,8 +173,8 @@ footer {
   border: 4px solid #5ACE77;
 }
 
-#check {
-  margin-left: 25%;
+#undo {
+  margin-left: 19%;
 }
 
 #loadInput, #saveInput, #dummy_id, #swal2-content {

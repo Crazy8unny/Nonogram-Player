@@ -20,8 +20,9 @@
     let importJSONBtn = container.querySelector('button[name="importJson"]')
     let copyBtn = container.querySelector('button[name="copy"]')
     let modeBtn = container.querySelector('button[name="mode"]')
-    let saveBtn = container.querySelector('button[name="save"]')
+    let undoBtn = container.querySelector('button[name="undo"]')
     let checkBtn = container.querySelector('button[name="check"]')
+    let saveBtn = container.querySelector('button[name="save"]')
 
     let blackBtn = container.querySelector('#blackBtn');
     let emptyBtn = container.querySelector('#emptyBtn');
@@ -372,6 +373,42 @@
       }
     })
 
+    undoBtn.addEventListener('click', function (e) {
+      if (prevGrids.length > 0) {
+        ogrid = prevGrids.pop();
+        let { horizontalClues, verticalClues } = generateClues(grid)
+        drawOutputGrid(grid, ogrid, horizontalClues, verticalClues, outputCanvas, outputCtx)
+      }
+    })
+
+    checkBtn.addEventListener('click', function (e) {
+      if (!winned) {
+        let wrong = false;
+        for (let row in grid) {
+          for (let col in grid[row]) {
+            if (grid[row][col] == 1 && ogrid[row][col] == 2 ||
+              grid[row][col] == 2 && ogrid[row][col] == 1) {
+              wrong = true;
+            }
+          }
+        }
+        if (wrong) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oh no',
+            text: 'You have mistake =,(',
+          });
+        }
+        else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Keep going !',
+            text: 'You don\'t have any mistakes 8)',
+          });
+        }
+      }
+    })
+
     saveBtn.addEventListener('click', function (e) {
       let gridString = '[\n   ' + grid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
       let ogridString = '[\n   ' + ogrid.map(row => JSON.stringify(row)).join(',\n   ') + '\n]'
@@ -409,35 +446,6 @@
           })
         })
     })
-
-    checkBtn.addEventListener('click', function (e) {
-      if (!winned) {
-        let wrong = false;
-        for (let row in grid) {
-          for (let col in grid[row]) {
-            if (grid[row][col] == 1 && ogrid[row][col] == 2 ||
-              grid[row][col] == 2 && ogrid[row][col] == 1) {
-              wrong = true;
-            }
-          }
-        }
-        if (wrong) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oh no',
-            text: 'You have mistake =,(',
-          });
-        }
-        else {
-          Swal.fire({
-            icon: 'success',
-            title: 'Keep going !',
-            text: 'You don\'t have any mistakes 8)',
-          });
-        }
-      }
-    })
-
 
 
 
@@ -832,7 +840,14 @@
       )
       let dist = Math.floor(width >= height ? width / 3 : height / 3);
       let changed = false;
-      prevGrids.push(grid);
+      let tempGrid = [];
+      for (row in grid) {
+        tempGrid[row] = [];
+        for (col in grid[row]) {
+          tempGrid[row][col] = grid[row][col];
+        }
+      }
+      prevGrids.push(tempGrid);
       for (let y in grid) {
         for (let x in grid[y]) {
           if (
@@ -841,11 +856,11 @@
           ) {
             switch (btn) {
               case 1:
-                grid[y][x] = 1; changed = true; break;
+                if (grid[y][x] != 1) { changed = true }; grid[y][x] = 1; break;
               case 2:
-                grid[y][x] = 0; changed = true; break;
+                if (grid[y][x] != 0) { changed = true }; grid[y][x] = 0; break;
               case 4:
-                grid[y][x] = 2; changed = true; break;
+                if (grid[y][x] != 2) { changed = true }; grid[y][x] = 2; break;
             }
           }
         }
