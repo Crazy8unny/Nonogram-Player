@@ -639,7 +639,8 @@
           )
 
           if (horizontalClues[y][x]) {
-            ctx.font = dim * 0.55 + 'px Arial'            ctx.fillStyle = '#000000'
+            ctx.font = dim * 0.55 + 'px Arial'
+            ctx.fillStyle = '#000000'
             ctx.fillText(
               horizontalClues[y][x],
               canvas.width / 3 - x * dim - dim / 1.5,
@@ -650,7 +651,8 @@
         }
 
         if (!horizontalClues[y].length) {
-          ctx.font = dim * 0.55 + 'px Arial'          ctx.fillStyle = '#000000'
+          ctx.font = dim * 0.55 + 'px Arial'
+          ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
             canvas.width / 3 - dim / 1.5,
@@ -673,7 +675,8 @@
           )
 
           if (verticalClues[x][y]) {
-            ctx.font = dim * 0.55 + 'px Arial'            ctx.fillStyle = '#000000'
+            ctx.font = dim * 0.55 + 'px Arial'
+            ctx.fillStyle = '#000000'
             ctx.fillText(
               verticalClues[x][y],
               canvas.width / 3 + x * dim + dim / 3,
@@ -683,7 +686,8 @@
         }
 
         if (!verticalClues[x].length) {
-          ctx.font = dim * 0.55 + 'px Arial'          ctx.fillStyle = '#000000'
+          ctx.font = dim * 0.55 + 'px Arial'
+          ctx.fillStyle = '#000000'
           ctx.fillText(
             0,
             canvas.width / 3 + x * dim + dim / 3,
